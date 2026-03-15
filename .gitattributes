@@ -5,6 +5,9 @@
 *.sh text eol=lf
 *.py text eol=lf
 *.ts text eol=lf
+*.json text eol=lf
 
-# Treat .jpg files as binary
-*.jpg -text
+# Treat image files as binary
+*.png binary
+*.jpg binary
+*.jpeg binary
