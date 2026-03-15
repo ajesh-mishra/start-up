@@ -1,0 +1,60 @@
+{
+  "name": "angular-frontend",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "angular-frontend",
+  "workspaceFolder": "/workspace",
+  "runServices": [
+    "angular-frontend"
+  ],
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Angular.ng-template",
+        "bradlc.vscode-tailwindcss",
+        "ajesh-mishra.stealth",
+        "usernamehw.errorlens",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "ms-vscode.vscode-typescript-next"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[html]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "eslint.validate": [
+          "javascript",
+          "typescript",
+          "html"
+        ],
+        "files.autoSave": "onFocusChange",
+        "js/ts.tsdk.path": "node_modules/typescript/lib",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "overrideCommand": false,
+  "updateRemoteUserUID": true,
+  "portsAttributes": {
+    "4200": {
+      "label": "Angular Dev Server",
+      "onAutoForward": "notify"
+    }
+  },
+  "forwardPorts": [
+    4200
+  ],
+  "postCreateCommand": "npm ci",
+  "postStartCommand": "npm run start"
+}

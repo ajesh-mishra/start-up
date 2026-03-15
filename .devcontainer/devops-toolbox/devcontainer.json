@@ -1,0 +1,17 @@
+{
+  "name": "devops-toolbox",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "devops-toolbox",
+  "workspaceFolder": "/workspace",
+  "runServices": [
+    "devops-toolbox"
+  ],
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ajesh-mishra.stealth"
+      ]
+    }
+  }
+}

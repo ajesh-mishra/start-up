@@ -1,0 +1,133 @@
+<div class="w-full pt-8 pb-4 px-8">
+  <div class="flex w-full">
+    <p class="text-xl mt-1 cursor-pointer" (click)="prevMonth()">&#9664;</p>
+    <p class="flex-1 text-center text-xl">{{ selectedDate() | date: 'MMMM yyyy' }}</p>
+    <p class="text-xl mt-1 cursor-pointer" (click)="nextMonth()">&#9654;</p>
+  </div>
+</div>
+
+<div class="grid grid-cols-7 gap-4 p-4">
+  @for (dayOfWeek of daysOfWeek; track $index) {
+    <p class="w-full text-center">{{ dayOfWeek }}</p>
+  }
+  @for (day of daysInMonth(); track $index) {
+    @let thisDate = `${selectedYear()}-${selectedMonth()}-` + `${day}`.padStart(2, '0');
+    <p
+      class="w-full text-center cursor-pointer rounded-full transition-colors duration-200"
+      [class.todaysdate]="this.todaysDateString() === thisDate"
+      [class.selecteddate]="this.selectedDateString() === thisDate"
+      (click)="updateSelectedDate(day)">
+      {{ day ? day : '&#160;' }}
+    </p>
+  }
+</div>
+
+@if (purchaseRx.isLoading()) {
+  <p>Loading purchase data...</p>
+}
+
+@if (editablePurchase(); as purchase) {
+  <div class="flex flex-col gap-6 mt-4">
+    <div class="flex gap-4 items-center pl-4 pr-6">
+      <div class="text-3xl h-12 w-12 flex items-center justify-center">🗓️</div>
+      <div class="flex flex-col">
+        <span class="text-sm font-medium">Date</span>
+        <span class="text-sm text-slate-500">{{ purchase.purchase_date | date: 'dd MMM, yyyy' }}</span>
+      </div>
+    </div>
+
+    <div class="flex gap-4 items-center pl-4 pr-6">
+      <div class="text-3xl h-12 w-12 flex items-center justify-center">🥛</div>
+      <div class="text-xs">
+        <span class="text-sm font-medium">Milk</span>
+        <div class="flex items-center gap-3 mt-1">
+          <div class="flex border border-slate-400 rounded-sm">
+            <button class="px-2 py-1 cursor-pointer hover:bg-red-100" (click)="decrement('milk')">-</button>
+            <span class="py-1 px-1">{{ purchase.milk }}</span>
+            <button class="px-2 py-1 cursor-pointer hover:bg-green-100" (click)="increment('milk')">+</button>
+          </div>
+          <span class="text-slate-400">x</span>
+          <span class="text-sm text-slate-500">{{ priceService.milk }}</span>
+        </div>
+      </div>
+      <div class="flex-1"></div>
+      <span>&#x20B9; {{ priceService.milk * purchase.milk }}</span>
+    </div>
+
+    <div class="flex gap-4 items-center pl-4 pr-6">
+      <div class="text-3xl h-12 w-12 flex items-center justify-center">🧈</div>
+      <div class="text-xs">
+        <span class="text-sm font-medium">Yogurt</span>
+        <div class="flex items-center gap-3 mt-1">
+          <div class="flex border border-slate-400 rounded-sm">
+            <button class="px-2 py-1 cursor-pointer hover:bg-red-100" (click)="decrement('yogurt')">-</button>
+            <span class="py-1 px-1">{{ purchase.yogurt }}</span>
+            <button class="px-2 py-1 cursor-pointer hover:bg-green-100" (click)="increment('yogurt')">+</button>
+          </div>
+          <span class="text-slate-400">x</span>
+          <span class="text-sm text-slate-500">{{ priceService.yogurt }}</span>
+        </div>
+      </div>
+      <div class="flex-1"></div>
+      <span>&#x20B9; {{ priceService.yogurt * purchase.yogurt }}</span>
+    </div>
+
+    <div class="flex gap-4 items-center pl-4 pr-6">
+      <div class="text-3xl h-12 w-12 flex items-center justify-center">🧀</div>
+      <div class="text-xs">
+        <span class="text-sm font-medium">Paneer</span>
+        <div class="flex items-center gap-3 mt-1">
+          <div class="flex border border-slate-400 rounded-sm">
+            <button class="px-2 py-1 cursor-pointer hover:bg-red-100" (click)="decrement('paneer')">-</button>
+            <span class="py-1 px-1">{{ purchase.paneer }}</span>
+            <button class="px-2 py-1 cursor-pointer hover:bg-green-100" (click)="increment('paneer')">+</button>
+          </div>
+          <span class="text-slate-400">x</span>
+          <span class="text-sm text-slate-500">{{ priceService.paneer }}</span>
+        </div>
+      </div>
+      <div class="flex-1"></div>
+      <span>&#x20B9; {{ priceService.paneer * purchase.paneer }}</span>
+    </div>
+
+    <div class="flex justify-end mt-6 px-4 w-full">
+      <button
+        (click)="save()"
+        [disabled]="isSaved()"
+        [class.bg-green-600]="isSaved()"
+        [class.bg-blue-600]="!isSaved()"
+        class="group relative flex w-full max-w-md items-center justify-between overflow-hidden rounded-xl px-6 py-3 text-white shadow-lg transition-all duration-300 hover:shadow-blue-500/25 hover:-translate-y-0.5 active:scale-95 disabled:cursor-default disabled:hover:translate-y-0">
+        <div class="absolute inset-0 bg-white/10 opacity-0 transition-opacity group-hover:opacity-100"></div>
+
+        <div class="flex items-center gap-3">
+          @if (isSaved()) {
+            <span class="text-xl animate-in zoom-in duration-300">✅ </span>
+            <span class="font-semibold tracking-wide animate-in fade-in slide-in-from-left-2">Saved</span>
+          } @else {
+            <span class="text-xl transition-transform group-hover:rotate-12">💾</span>
+            <span class="font-semibold tracking-wide">{{ purchase.id ? 'Update' : 'Add' }}</span>
+          }
+        </div>
+
+        <div class="h-6 w-px bg-white/20 mx-4"></div>
+
+        <div class="flex flex-col items-end">
+          <span class="text-[10px] uppercase tracking-widest opacity-80">Total</span>
+          <span class="text-lg font-bold tabular-nums">
+            {{
+              priceService.paneer * purchase.paneer +
+                priceService.yogurt * purchase.yogurt +
+                priceService.milk * purchase.milk | currency: 'INR'
+            }}
+          </span>
+        </div>
+      </button>
+    </div>
+  </div>
+}
+
+@if (purchaseRx.error()) {
+  <p class="text-red-500">Failed to load data.</p>
+}
+
+<router-outlet />

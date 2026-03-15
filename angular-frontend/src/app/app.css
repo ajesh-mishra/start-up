@@ -1,0 +1,9 @@
+@reference "tailwindcss";
+
+.todaysdate {
+  @apply text-blue-500 border rounded-sm border-blue-500;
+}
+
+.selecteddate {
+  @apply text-white bg-blue-500 border rounded-sm border-blue-500;
+}

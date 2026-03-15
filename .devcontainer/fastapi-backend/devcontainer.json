@@ -1,0 +1,53 @@
+{
+  "name": "fastapi-backend",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "fastapi-backend",
+  "workspaceFolder": "/workspace",
+  "runServices": [
+    "fastapi-backend"
+  ],
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "ajesh-mishra.stealth",
+        "usernamehw.errorlens",
+        "tamasfe.even-better-toml"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter"
+        },
+        "python.analysis.typeCheckingMode": "basic",
+        "python.formatting.provider": "black",
+        "python.sortImports.args": [
+          "--profile",
+          "black"
+        ],
+        "python.venvPath": "/workspace",
+        "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
+        "python.terminal.activateEnvironment": true
+      }
+    }
+  },
+  "overrideCommand": false,
+  "updateRemoteUserUID": true,
+  "portsAttributes": {
+    "8000": {
+      "label": "FastAPI Dev Server",
+      "onAutoForward": "notify"
+    }
+  },
+  "forwardPorts": [
+    8000
+  ],
+  "postCreateCommand": "uv sync --frozen",
+  "postStartCommand": "bash start.sh"
+}

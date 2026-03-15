@@ -1,0 +1,45 @@
+services:
+
+  devops-toolbox:
+    build:
+      context: .
+      dockerfile: ../.devcontainer/devops-toolbox/Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
+
+  angular-frontend:
+    build:
+      context: ../angular-frontend
+      dockerfile: ../.devcontainer/angular-frontend/Dockerfile
+    volumes:
+      - ../angular-frontend:/workspace:cached
+    command: sleep infinity
+    ports:
+      - "4200:4200"
+    depends_on:
+      - fastapi-backend
+
+  fastapi-backend:
+    build:
+      context: ../fastapi-backend
+      dockerfile: ../.devcontainer/fastapi-backend/Dockerfile
+    volumes:
+      - ../fastapi-backend:/workspace:cached
+    command: sleep infinity
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres-database
+
+  postgres-database:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: purchases
+    volumes:
+      - ../postgres-database/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
