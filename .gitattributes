@@ -1,0 +1,10 @@
+# Auto-detect text files and perform LF normalization
+* text=auto
+
+# Set specific line endings
+*.sh text eol=lf
+*.py text eol=lf
+*.ts text eol=lf
+
+# Treat .jpg files as binary
+*.jpg -text

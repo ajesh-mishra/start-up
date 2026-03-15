@@ -49,5 +49,5 @@
     8000
   ],
   "postCreateCommand": "uv sync --frozen",
-  "postStartCommand": "bash start.sh"
+  "postStartCommand": "/usr/bin/env bash start.sh"
 }
