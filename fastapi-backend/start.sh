@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+until pg_isready -h postgres-database -p 5432 -U postgres
+do
+  sleep 2
+done
+
 echo "Running Database Migrations"
 alembic upgrade head
 
