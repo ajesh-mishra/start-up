@@ -51,10 +51,6 @@ RUN git clone https://github.com/ahmetb/kubectx /opt/kubectx \
  && ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx \
  && ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
-# stern
-# RUN curl -L https://github.com/stern/stern/releases/latest/download/stern_linux_amd64.tar.gz \
-#  | tar xz && mv stern /usr/local/bin/
-
 # eksctl
 RUN curl -sL https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz \
  | tar xz -C /tmp \

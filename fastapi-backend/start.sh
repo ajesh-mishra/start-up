@@ -2,10 +2,14 @@
 set -euo pipefail
 
 echo "Running Database Migrations"
-uv run alembic upgrade head
+alembic upgrade head
 
-echo "Starting FastAPI Development Server"
-uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
+echo "Environment: compose = ${compose:-}"
 
-# echo "Starting FastAPI Production Server"
-# uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+if [ ${compose:-} = "true" ]; then
+    echo "Starting FastAPI Production Server"
+    exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
+else
+    echo "Starting FastAPI Development Server"
+    uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
+fi

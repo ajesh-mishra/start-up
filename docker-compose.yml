@@ -1,0 +1,43 @@
+services:
+
+  angular-frontend:
+    build:
+      context: ./angular-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - fastapi-backend
+    networks:
+      - app-network
+
+  fastapi-backend:
+    build:
+      context: ./fastapi-backend
+      dockerfile: Dockerfile
+    environment:
+      compose: true
+    command: ["bash", "start.sh", "true"]
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres-database
+    networks:
+      - app-network
+
+  postgres-database:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: purchases
+    volumes:
+      - ./postgres-database/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:
