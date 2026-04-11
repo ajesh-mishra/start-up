@@ -9,4 +9,7 @@ Command to start all the three services/ containers.
 docker compose up
 ```
 
-Access the application using URL - `http://localhost:4200/`
+Access the application using URLs
+
+- UI - http://localhost:4200/
+- API - http://localhost:8000/docs
