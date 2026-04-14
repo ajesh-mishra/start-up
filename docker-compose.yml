@@ -15,9 +15,11 @@ services:
     build:
       context: ./fastapi-backend
       dockerfile: Dockerfile
+    env_file:
+      - ./fastapi-backend/.env
     environment:
-      compose: true
-    command: ["bash", "start.sh", "true"]
+      RUN_CONTEXT: docker-compose
+    command: ["bash", "start.sh"]
     ports:
       - "8000:8000"
     depends_on:

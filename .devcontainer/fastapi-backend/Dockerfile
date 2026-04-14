@@ -5,6 +5,7 @@ RUN apt-get update \
         git \
         curl \
         build-essential \
+        postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=ghcr.io/astral-sh/uv:0.4.30 /uv /uvx /bin/

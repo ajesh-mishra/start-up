@@ -1,12 +1,16 @@
-from sqlmodel import create_engine, Session
+import os
 
-DATABASE_HOST = "postgres-database"
-DATABASE_PORT = 5432
-DATABASE_USER = "postgres"
-DATABASE_PASSWORD = "postgres"  
-DATABASE_URL = (
-    f"postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}"
-)
+from dotenv import load_dotenv
+from sqlmodel import Session, create_engine
+
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise RuntimeError(
+        "DATABASE_URL is not set. Define it in environment variables or a .env file."
+    )
 
 engine = create_engine(DATABASE_URL, echo=True)
 

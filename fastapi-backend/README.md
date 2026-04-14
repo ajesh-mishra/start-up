@@ -25,12 +25,12 @@ docker run -p 8000:8000 fastapi-backend:0.0.1
 
 ### Alembic
 Initial set-up
-- Update `alembic.ini` with `sqlalchemy.url`
+- Create `.env` from `.env.example` and set `DATABASE_URL`
 - Update `alembic/env.py` with `target_metadata = SQLModel.metadata`
 
 ```bash
 # Generate Migrations
-alembic revision --autogenerate -m "creates purchase table"
+alembic revision --autogenerate -m "creates all tables"
 
 # Apply Migrations
 alembic upgrade head
@@ -38,6 +38,7 @@ alembic upgrade head
 
 ### Verify in Postgres Database
 ```bash
+docker exec -it start-up-fastapi-backend-1 psql -U postgres
 docker exec -it start-up_devcontainer-postgres-database-1 psql -U postgres
 # alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000
 

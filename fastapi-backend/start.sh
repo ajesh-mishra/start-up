@@ -9,12 +9,16 @@ done
 echo "Running Database Migrations"
 alembic upgrade head
 
-echo "Environment: compose = ${compose:-}"
+echo "Environment: RUN_CONTEXT = ${RUN_CONTEXT:-}"
 
-if [ ${compose:-} = "true" ]; then
-    echo "Starting FastAPI Production Server"
+if [ "${RUN_CONTEXT:-}" = "docker-compose" ]
+then
+    echo "Starting Uvicorn Production Server"
     exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
-else
+fi
+
+if [ "${RUN_CONTEXT:-}" = "devcontainer" ]
+then
     echo "Starting FastAPI Development Server"
     uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
 fi

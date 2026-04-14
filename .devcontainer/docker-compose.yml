@@ -26,6 +26,8 @@ services:
       dockerfile: ../.devcontainer/fastapi-backend/Dockerfile
     volumes:
       - ../fastapi-backend:/workspace:cached
+    environment:
+      RUN_CONTEXT: devcontainer
     command: sleep infinity
     ports:
       - "8000:8000"

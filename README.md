@@ -1,11 +1,16 @@
 ## Start-up
-Command to start all the three services/ containers.
+Command to build & start all the services/ containers.
 
 - Angular Frontend
 - Fastapi Backend
-- Posrgres Database
+- Postgres Database
+- DevOps Toolbox
 
 ```bash
+# Command to build all the images
+docker compose build
+
+# Command to start all the services
 docker compose up
 ```
 

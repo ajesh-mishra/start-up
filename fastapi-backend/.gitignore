@@ -27,7 +27,7 @@ wheels/
 
 # Environment variables
 # Store sensitive credentials in a .env file and ignore it
-.env
+# .env
 .flaskenv
 
 # IDE and editor files
