@@ -1,6 +1,9 @@
 FROM mcr.microsoft.com/devcontainers/typescript-node:22-bullseye
 
-RUN npm install -g @angular/cli@21 \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/* \
+    && npm install -g @angular/cli@21 \
     && npm cache clean --force
 
 WORKDIR /workspace

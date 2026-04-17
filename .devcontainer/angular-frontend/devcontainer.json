@@ -2,7 +2,10 @@
   "name": "angular-frontend",
   "dockerComposeFile": "../docker-compose.yml",
   "service": "angular-frontend",
-  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+  "workspaceFolder": "/workspace/angular-frontend",
   "runServices": [
     "angular-frontend"
   ],
@@ -56,5 +59,5 @@
     4200
   ],
   "postCreateCommand": "npm ci",
-  "postStartCommand": "npm run start"
+  "postStartCommand": "/bin/bash start.sh"
 }

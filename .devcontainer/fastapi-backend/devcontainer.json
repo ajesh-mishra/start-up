@@ -2,7 +2,10 @@
   "name": "fastapi-backend",
   "dockerComposeFile": "../docker-compose.yml",
   "service": "fastapi-backend",
-  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+  "workspaceFolder": "/workspace/fastapi-backend",
   "runServices": [
     "fastapi-backend"
   ],
@@ -31,8 +34,8 @@
           "--profile",
           "black"
         ],
-        "python.venvPath": "/workspace",
-        "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
+        "python.venvPath": "/workspace/fastapi-backend",
+        "python.defaultInterpreterPath": "/workspace/fastapi-backend/.venv/bin/python",
         "python.terminal.activateEnvironment": true
       }
     }

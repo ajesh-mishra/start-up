@@ -13,26 +13,28 @@ services:
       context: ../angular-frontend
       dockerfile: ../.devcontainer/angular-frontend/Dockerfile
     volumes:
-      - ../angular-frontend:/workspace:cached
+      - ..:/workspace:cached
     command: sleep infinity
     ports:
       - "4200:4200"
     depends_on:
-      - fastapi-backend
+      fastapi-backend:
+        condition: service_started
 
   fastapi-backend:
     build:
       context: ../fastapi-backend
       dockerfile: ../.devcontainer/fastapi-backend/Dockerfile
     volumes:
-      - ../fastapi-backend:/workspace:cached
+      - ..:/workspace:cached
     environment:
       RUN_CONTEXT: devcontainer
     command: sleep infinity
     ports:
       - "8000:8000"
     depends_on:
-      - postgres-database
+      postgres-database:
+        condition: service_healthy
 
   postgres-database:
     image: postgres:16
@@ -45,3 +47,9 @@ services:
       - ../postgres-database/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -p 5432 -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s

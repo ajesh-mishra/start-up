@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-until pg_isready -h postgres-database -p 5432 -U postgres
-do
-  sleep 2
-done
+if [ "${RUN_CONTEXT:-}" = "devcontainer" ] && command -v git >/dev/null 2>&1
+then
+  git config --global --add safe.directory /workspace
+fi
+
 
 echo "Running Database Migrations"
 alembic upgrade head
