@@ -32,6 +32,7 @@ if config.config_file_name is not None:
 # target_metadata = None
 from sqlmodel import SQLModel
 from app import models
+from app.models.product import Product
 from app.models.purchase import Purchase
 
 target_metadata = SQLModel.metadata

@@ -1,5 +1,7 @@
 ## Start-up Project
 The project is configured to use devcontainers, please open in VSCode or PyCharm.
+- This is a FastApi backend
+- Uses Alembic for migrations
 
 ### Test Application Code using DevContainers
 Command to start the application. 

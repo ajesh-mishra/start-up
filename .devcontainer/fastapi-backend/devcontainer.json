@@ -40,7 +40,6 @@
       }
     }
   },
-  "overrideCommand": false,
   "updateRemoteUserUID": true,
   "portsAttributes": {
     "8000": {
@@ -51,6 +50,7 @@
   "forwardPorts": [
     8000
   ],
+  "overrideCommand": false,
   "postCreateCommand": "uv sync --frozen",
   "postStartCommand": "/usr/bin/env bash start.sh"
 }

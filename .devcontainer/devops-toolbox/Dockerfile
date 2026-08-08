@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     git \
     vim \
     jq \
+    ansible \
     bash-completion \
     ca-certificates \
     gnupg \
@@ -61,11 +62,16 @@ RUN curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_am
  -o /usr/local/bin/yq \
  && chmod +x /usr/local/bin/yq
 
+# starship prompt
+RUN curl -sS https://starship.rs/install.sh | sh -s -- -y
+
 # Bash completions
 RUN echo "source /usr/share/bash-completion/bash_completion" >> /root/.bashrc \
  && echo "source <(kubectl completion bash)" >> /root/.bashrc \
  && echo "source <(helm completion bash)" >> /root/.bashrc \
- && echo "source <(terraform -install-autocomplete)" >> /root/.bashrc
+ && echo "source <(terraform -install-autocomplete)" >> /root/.bashrc \
+ && echo 'eval "$(starship init bash)"' >> /root/.bashrc \
+ && echo 'eval "$(starship init bash)"' >> /etc/bash.bashrc
 
 WORKDIR /workspace
 

@@ -1,9 +1,25 @@
 @reference "tailwindcss";
 
 .todaysdate {
-  @apply text-blue-500 border rounded-sm border-blue-500;
+  @apply border border-blue-300 bg-blue-50 text-blue-700;
 }
 
 .selecteddate {
-  @apply text-white bg-blue-500 border rounded-sm border-blue-500;
+  @apply border border-blue-600 bg-blue-600 text-white shadow-sm;
+}
+
+.calendar-day {
+  @apply relative;
+}
+
+.calendar-day:not(.selecteddate):not(.todaysdate):hover {
+  @apply bg-slate-100 text-slate-800;
+}
+
+.has-purchase:not(.selecteddate) {
+  @apply text-slate-800;
+}
+
+.purchase-dot {
+  @apply absolute bottom-1 h-1.5 w-1.5 rounded-full;
 }

@@ -1,0 +1,504 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "FastAPI", "version": "0.1.0" },
+  "paths": {
+    "/purchase/": {
+      "get": {
+        "tags": ["purchase"],
+        "summary": "Get Purchase",
+        "operationId": "get_purchase_purchase__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": { "$ref": "#/components/schemas/Purchase" },
+                  "type": "array",
+                  "title": "Response Get Purchase Purchase  Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/purchase/daily-expense": {
+      "get": {
+        "tags": ["purchase"],
+        "summary": "Get Purchase By Date",
+        "operationId": "get_purchase_by_date_purchase_daily_expense_get",
+        "parameters": [
+          {
+            "name": "purchase_date",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "date", "title": "Purchase Date" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Purchase" },
+                  "title": "Response Get Purchase By Date Purchase Daily Expense Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
+          }
+        }
+      }
+    },
+    "/purchase/monthly-expense": {
+      "get": {
+        "tags": ["purchase"],
+        "summary": "Get Purchase By Month",
+        "operationId": "get_purchase_by_month_purchase_monthly_expense_get",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "maximum": 2100, "minimum": 2000, "examples": [2026], "title": "Year" }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "maximum": 12, "minimum": 1, "examples": [3], "title": "Month" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Purchase" },
+                  "title": "Response Get Purchase By Month Purchase Monthly Expense Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
+          }
+        }
+      }
+    },
+    "/purchase/total-monthly-expense": {
+      "get": {
+        "tags": ["purchase"],
+        "summary": "Get Total Purchase By Month",
+        "operationId": "get_total_purchase_by_month_purchase_total_monthly_expense_get",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "maximum": 2100, "minimum": 2000, "examples": [2026], "title": "Year" }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "maximum": 12, "minimum": 1, "examples": [3], "title": "Month" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+                  "title": "Response Get Total Purchase By Month Purchase Total Monthly Expense Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
+          }
+        }
+      }
+    },
+    "/purchase/total-yearly-expense": {
+      "get": {
+        "tags": ["purchase"],
+        "summary": "Get Total Purchase By Year",
+        "operationId": "get_total_purchase_by_year_purchase_total_yearly_expense_get",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer", "maximum": 2100, "minimum": 2000, "examples": [2026], "title": "Year" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object", "additionalProperties": { "type": "integer" } },
+                  "title": "Response Get Total Purchase By Year Purchase Total Yearly Expense Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
+          }
+        }
+      }
+    },
+    "/purchase": {
+      "post": {
+        "tags": ["purchase"],
+        "summary": "Create Purchase",
+        "operationId": "create_purchase_purchase_post",
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PurchaseCreate" } } },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Purchase" } } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
+          }
+        }
+      }
+    },
+    "/purchase/{purchase_id}": {
+      "put": {
+        "tags": ["purchase"],
+        "summary": "Update Purchase",
+        "operationId": "update_purchase_purchase__purchase_id__put",
+        "parameters": [
+          {
+            "name": "purchase_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Purchase Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PurchaseUpdate" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Purchase" } } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["purchase"],
+        "summary": "Delete Purchase",
+        "operationId": "delete_purchase_purchase__purchase_id__delete",
+        "parameters": [
+          {
+            "name": "purchase_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Purchase Id" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
+          }
+        }
+      }
+    },
+    "/product/": {
+      "get": {
+        "tags": ["product"],
+        "summary": "Get Product",
+        "operationId": "get_product_product__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": { "$ref": "#/components/schemas/Product" },
+                  "type": "array",
+                  "title": "Response Get Product Product  Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["product"],
+        "summary": "Create Product",
+        "operationId": "create_product_product__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": { "$ref": "#/components/schemas/ProductCreate" },
+                "type": "array",
+                "title": "Products"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": { "$ref": "#/components/schemas/Product" },
+                  "type": "array",
+                  "title": "Response Create Product Product  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
+          }
+        }
+      }
+    },
+    "/product/{product_id}": {
+      "put": {
+        "tags": ["product"],
+        "summary": "Update Product",
+        "operationId": "update_product_product__product_id__put",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Product Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProductUpdate" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Product" } } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["product"],
+        "summary": "Delete Product",
+        "operationId": "delete_product_product__product_id__delete",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Product Id" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Successful Response" },
+          "422": {
+            "description": "Validation Error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Read Root",
+        "operationId": "read_root__get",
+        "responses": {
+          "200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } }
+        }
+      }
+    },
+    "/items/{item_id}": {
+      "get": {
+        "summary": "Read Item",
+        "operationId": "read_item_items__item_id__get",
+        "parameters": [
+          { "name": "item_id", "in": "path", "required": true, "schema": { "type": "integer", "title": "Item Id" } },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": { "anyOf": [{ "type": "string" }, { "type": "null" }], "title": "Q" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Successful Response", "content": { "application/json": { "schema": {} } } },
+          "422": {
+            "description": "Validation Error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } } }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": { "items": { "$ref": "#/components/schemas/ValidationError" }, "type": "array", "title": "Detail" }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Product": {
+        "properties": {
+          "name": { "type": "string", "maxLength": 100, "minLength": 1, "title": "Name" },
+          "category": { "type": "string", "maxLength": 100, "minLength": 1, "title": "Category" },
+          "price": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Price",
+            "description": "Unit price in minor currency units"
+          },
+          "id": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Id" }
+        },
+        "type": "object",
+        "required": ["name", "category", "price"],
+        "title": "Product"
+      },
+      "ProductCreate": {
+        "properties": {
+          "name": { "type": "string", "maxLength": 100, "minLength": 1, "title": "Name" },
+          "category": { "type": "string", "maxLength": 100, "minLength": 1, "title": "Category" },
+          "price": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Price",
+            "description": "Unit price in minor currency units"
+          }
+        },
+        "type": "object",
+        "required": ["name", "category", "price"],
+        "title": "ProductCreate"
+      },
+      "ProductUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [{ "type": "string", "maxLength": 100, "minLength": 1 }, { "type": "null" }],
+            "title": "Name"
+          },
+          "category": {
+            "anyOf": [{ "type": "string", "maxLength": 100, "minLength": 1 }, { "type": "null" }],
+            "title": "Category"
+          },
+          "price": {
+            "anyOf": [{ "type": "integer", "minimum": 0.0 }, { "type": "null" }],
+            "title": "Price",
+            "description": "Unit price in minor currency units"
+          }
+        },
+        "type": "object",
+        "title": "ProductUpdate"
+      },
+      "Purchase": {
+        "properties": {
+          "purchase_date": { "type": "string", "format": "date", "title": "Purchase Date" },
+          "product_id": { "type": "integer", "exclusiveMinimum": 0.0, "title": "Product Id" },
+          "quantity": { "type": "integer", "exclusiveMinimum": 0.0, "title": "Quantity" },
+          "price": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Price",
+            "description": "Unit price in minor currency units"
+          },
+          "id": { "anyOf": [{ "type": "integer" }, { "type": "null" }], "title": "Id" }
+        },
+        "type": "object",
+        "required": ["purchase_date", "product_id", "quantity", "price"],
+        "title": "Purchase"
+      },
+      "PurchaseCreate": {
+        "properties": {
+          "purchase_date": { "type": "string", "format": "date", "title": "Purchase Date" },
+          "product_id": { "type": "integer", "exclusiveMinimum": 0.0, "title": "Product Id" },
+          "quantity": { "type": "integer", "exclusiveMinimum": 0.0, "title": "Quantity" },
+          "price": {
+            "anyOf": [{ "type": "integer", "minimum": 0.0 }, { "type": "null" }],
+            "title": "Price",
+            "description": "Unit price in minor currency units"
+          }
+        },
+        "type": "object",
+        "required": ["purchase_date", "product_id", "quantity"],
+        "title": "PurchaseCreate"
+      },
+      "PurchaseUpdate": {
+        "properties": {
+          "purchase_date": {
+            "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }],
+            "title": "Purchase Date"
+          },
+          "product_id": {
+            "anyOf": [{ "type": "integer", "exclusiveMinimum": 0.0 }, { "type": "null" }],
+            "title": "Product Id"
+          },
+          "quantity": {
+            "anyOf": [{ "type": "integer", "exclusiveMinimum": 0.0 }, { "type": "null" }],
+            "title": "Quantity"
+          }
+        },
+        "type": "object",
+        "title": "PurchaseUpdate"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" },
+          "input": { "title": "Input" },
+          "ctx": { "type": "object", "title": "Context" }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

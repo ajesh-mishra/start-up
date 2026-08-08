@@ -23,3 +23,6 @@ then
     echo "Starting FastAPI Development Server"
     uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
 fi
+
+echo "Unsupported RUN_CONTEXT='${RUN_CONTEXT:-}'. Expected 'docker-compose' or 'devcontainer'."
+exit 1

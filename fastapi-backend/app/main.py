@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from app.routes.purchase import router
+from app.routes.product import router as product_router
+from app.routes.purchase import router as purchase_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -17,7 +18,8 @@ app.add_middleware(
 )
 
 
-app.include_router(router)
+app.include_router(purchase_router)
+app.include_router(product_router)
 
 
 @app.get("/")

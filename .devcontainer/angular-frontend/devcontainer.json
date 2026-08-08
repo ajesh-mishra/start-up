@@ -47,7 +47,6 @@
       }
     }
   },
-  "overrideCommand": false,
   "updateRemoteUserUID": true,
   "portsAttributes": {
     "4200": {
@@ -58,6 +57,7 @@
   "forwardPorts": [
     4200
   ],
+  "overrideCommand": false,
   "postCreateCommand": "npm ci",
   "postStartCommand": "/bin/bash start.sh"
 }

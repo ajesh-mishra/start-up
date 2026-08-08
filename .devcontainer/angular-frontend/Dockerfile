@@ -5,11 +5,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && npm install -g @angular/cli@21 \
     && npm cache clean --force
-
-WORKDIR /workspace
-
+    
 ENV NODE_ENV=development \
     CHOKIDAR_USEPOLLING=true \
     NODE_OPTIONS=--max-old-space-size=4096
+    
+WORKDIR /workspace
 
 EXPOSE 4200

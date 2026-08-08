@@ -7,17 +7,37 @@ Command to build & start all the services/ containers.
 - DevOps Toolbox
 
 ```bash
-# Command to build all the images
-docker compose build --no-cache
+# Build + start all services
+docker compose up --build
 
-# Command to start all the services
-docker compose up
+# For a clean database reset (optional)
+docker compose down -v
 ```
 
 Access the application using URLs
 
 - UI - http://localhost:4200/
 - API - http://localhost:8000/docs
+
+## Build and push images with Docker Buildx Bake
+
+Use the root `docker-bake.hcl` to build both images consistently.
+
+```bash
+# One-time setup for buildx (if not already created)
+docker buildx create --name startup-builder --use --bootstrap
+
+# Build and push both images (multi-arch) in one command
+docker buildx bake all --set TAG=0.0.1 --push
+```
+
+Push `latest` tag:
+
+```bash
+docker login
+
+docker buildx bake all --push
+```
 
 ### Docker Compose networking note
 
