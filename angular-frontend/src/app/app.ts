@@ -1,5 +1,5 @@
 import { DatePipe, CurrencyPipe } from '@angular/common';
-import { Component, computed, inject, linkedSignal, signal } from '@angular/core';
+import { Component, computed, inject, linkedSignal, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ProductCreateDto, ProductDto, ProductService } from './product.service';
 import { MonthlyTotalDto, PurchaseDto, PurchaseService } from './purchase.service';
@@ -19,6 +19,7 @@ interface EditablePurchaseI {
   selector: 'app-root',
   imports: [RouterOutlet, DatePipe, CurrencyPipe],
   templateUrl: './app.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.css',
 })
 export class App {
@@ -41,6 +42,9 @@ export class App {
   protected newProductPrice = signal('');
   protected isCreatingProduct = signal(false);
   protected createProductError = signal('');
+  protected selectedPurchaseProductId = signal<number | null>(null);
+  protected editingPriceProductId = signal<number | null>(null);
+  protected editedPriceValue = signal('');
 
   productsRx = rxResource<ProductDto[], void>({
     stream: () => this.productService.getProducts(),
@@ -91,7 +95,7 @@ export class App {
           id: purchase.id,
           productId: product.id,
           productName: product.name,
-          unitPrice: product.price,
+          unitPrice: purchase.price,
           quantity: purchase.quantity,
           purchaseDate: this.selectedDateString(),
         } satisfies EditablePurchaseI;
@@ -114,19 +118,20 @@ export class App {
   protected hasPurchaseChanges = computed(() => {
     const originalPurchases = this.purchaseRx.value() ?? [];
     const currentPurchases = this.editablePurchase();
+    const currentByProductId = new Map(currentPurchases.map((purchase) => [purchase.productId, purchase]));
 
-    const originalQtyByProductId = new Map(
-      originalPurchases.map((purchase) => [purchase.product_id, purchase.quantity]),
-    );
-    const currentQtyByProductId = new Map(currentPurchases.map((purchase) => [purchase.productId, purchase.quantity]));
-
-    if (originalQtyByProductId.size !== currentQtyByProductId.size) {
+    if (originalPurchases.length !== currentByProductId.size) {
       return true;
     }
 
-    for (const [productId, originalQty] of originalQtyByProductId.entries()) {
-      const currentQty = currentQtyByProductId.get(productId);
-      if (currentQty === undefined || currentQty !== originalQty) {
+    for (const originalPurchase of originalPurchases) {
+      const currentPurchase = currentByProductId.get(originalPurchase.product_id);
+      if (!currentPurchase) {
+        return true;
+      }
+
+      const originalPrice = originalPurchase.price;
+      if (currentPurchase.quantity !== originalPurchase.quantity || currentPurchase.unitPrice !== originalPrice) {
         return true;
       }
     }
@@ -162,18 +167,25 @@ export class App {
     return serverMonthlyTotal + (currentSelectedDateTotal - originalSelectedDateTotal);
   });
 
-  protected purchasedDaysInMonth = computed(() => {
+  protected purchaseTotalsByDay = computed(() => {
     const purchases = this.monthlyPurchaseRx.value() ?? [];
-    const purchasedDays = new Set<number>();
+    const totalsByDay = new Map<number, number>();
 
     for (const purchase of purchases) {
       const day = this.extractDayFromPurchaseDate(purchase.purchase_date);
-      if (day !== null) {
-        purchasedDays.add(day);
+      if (day === null) {
+        continue;
       }
+
+      const currentTotal = totalsByDay.get(day) ?? 0;
+      totalsByDay.set(day, currentTotal + purchase.price * purchase.quantity);
     }
 
-    return purchasedDays;
+    return totalsByDay;
+  });
+
+  protected purchasedDaysInMonth = computed(() => {
+    return new Set(this.purchaseTotalsByDay().keys());
   });
 
   protected isExistingPurchase = computed(() => (this.purchaseRx.value() ?? []).length > 0);
@@ -328,6 +340,82 @@ export class App {
         removedIds.includes(removedPersistedId as number) ? removedIds : [...removedIds, removedPersistedId as number],
       );
     }
+
+    const hasPurchase = this.editablePurchase().some((purchase) => purchase.productId === productId);
+    if (!hasPurchase && this.selectedPurchaseProductId() === productId) {
+      this.selectedPurchaseProductId.set(null);
+      this.cancelPriceEdit();
+    }
+  }
+
+  protected selectPurchase(productId: number) {
+    this.selectedPurchaseProductId.set(productId);
+  }
+
+  protected isPurchaseSelected(productId: number) {
+    return this.selectedPurchaseProductId() === productId;
+  }
+
+  protected startPriceEdit(productId: number, currentPrice: number) {
+    this.selectedPurchaseProductId.set(productId);
+    this.editingPriceProductId.set(productId);
+    this.editedPriceValue.set(String(currentPrice));
+  }
+
+  protected onEditedPriceValueChange(value: string) {
+    this.editedPriceValue.set(value);
+  }
+
+  protected isPriceEditing(productId: number) {
+    return this.editingPriceProductId() === productId;
+  }
+
+  protected canApplyPriceEdit() {
+    const value = Number(this.editedPriceValue());
+    return Number.isInteger(value) && value >= 0;
+  }
+
+  protected applyPriceEdit(productId: number) {
+    if (!this.isPriceEditing(productId) || !this.canApplyPriceEdit()) {
+      return;
+    }
+
+    const updatedPrice = Number(this.editedPriceValue());
+    this.editablePurchase.update((purchases) =>
+      purchases.map((purchase) =>
+        purchase.productId === productId ? { ...purchase, unitPrice: updatedPrice } : purchase,
+      ),
+    );
+
+    this.cancelPriceEdit();
+  }
+
+  protected cancelPriceEdit() {
+    this.editingPriceProductId.set(null);
+    this.editedPriceValue.set('');
+  }
+
+  private getProductPriceUpdateOperations() {
+    const products = this.productsRx.value() ?? [];
+    const productPriceById = new Map(
+      products
+        .filter((product): product is ProductDto & { id: number } => product.id !== null)
+        .map((product) => [product.id, product.price]),
+    );
+
+    const updatedPricesByProductId = new Map<number, number>();
+    for (const purchase of this.editablePurchase()) {
+      const currentProductPrice = productPriceById.get(purchase.productId);
+      if (currentProductPrice === undefined || currentProductPrice === purchase.unitPrice) {
+        continue;
+      }
+
+      updatedPricesByProductId.set(purchase.productId, purchase.unitPrice);
+    }
+
+    return Array.from(updatedPricesByProductId.entries()).map(([productId, price]) =>
+      this.productService.updateProduct(productId, { price }),
+    );
   }
 
   save() {
@@ -344,6 +432,7 @@ export class App {
             purchase_date: item.purchaseDate,
             product_id: item.productId,
             quantity: item.quantity,
+            price: item.unitPrice,
           });
         }
 
@@ -351,11 +440,13 @@ export class App {
           purchase_date: item.purchaseDate,
           product_id: item.productId,
           quantity: item.quantity,
+          price: item.unitPrice,
         });
       });
 
     const deleteOperations = this.removedPurchaseIds().map((id) => this.purchaseService.deletePurchase(id));
-    const operations = [...upsertOperations, ...deleteOperations];
+    const productPriceUpdateOperations = this.getProductPriceUpdateOperations();
+    const operations = [...upsertOperations, ...deleteOperations, ...productPriceUpdateOperations];
 
     if (!operations.length) {
       this.isSaved.set(true);
@@ -366,7 +457,10 @@ export class App {
     forkJoin(operations.length ? operations : [of(null)]).subscribe((data) => {
       console.log('Purchase saved successfully', data);
       this.removedPurchaseIds.set([]);
+      this.selectedPurchaseProductId.set(null);
+      this.cancelPriceEdit();
       this.purchaseRx.reload();
+      this.productsRx.reload();
       this.monthlyTotalRx.reload();
       this.monthlyPurchaseRx.reload();
     });
@@ -388,9 +482,25 @@ export class App {
     return day > 0 && this.purchasedDaysInMonth().has(day);
   }
 
+  protected purchaseTotalLabel(day: number) {
+    const total = this.purchaseTotalsByDay().get(day) ?? 0;
+    if (total <= 0) {
+      return '';
+    }
+
+    const compactNumber = new Intl.NumberFormat('en-IN', {
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    }).format(total);
+
+    return `₹${compactNumber}`;
+  }
+
   updateSelectedDate(day: number) {
     const selectedDate = new Date(this.selectedYear(), parseInt(this.selectedMonth()) - 1, day);
     this.removedPurchaseIds.set([]);
+    this.selectedPurchaseProductId.set(null);
+    this.cancelPriceEdit();
     this.selectedDate.set(selectedDate);
   }
 
@@ -416,6 +526,30 @@ export class App {
     return [...leadingZeros, ...days];
   });
 
+  protected calendarWeeks = computed(() => {
+    const days = this.daysInMonth();
+    const weeks: number[][] = [];
+
+    for (let i = 0; i < days.length; i += 7) {
+      weeks.push(days.slice(i, i + 7));
+    }
+
+    return weeks;
+  });
+
+  protected selectedWeekIndex = computed(() => {
+    const selectedDay = this.selectedDate().getDate();
+    const weeks = this.calendarWeeks();
+
+    for (let weekIndex = 0; weekIndex < weeks.length; weekIndex += 1) {
+      if (weeks[weekIndex].includes(selectedDay)) {
+        return weekIndex;
+      }
+    }
+
+    return -1;
+  });
+
   protected firstDayOfMonth = computed(() => {
     const currentDate = this.selectedDate();
     return new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -425,6 +559,8 @@ export class App {
     const currentDate = this.selectedDate();
     const nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     this.removedPurchaseIds.set([]);
+    this.selectedPurchaseProductId.set(null);
+    this.cancelPriceEdit();
     this.selectedDate.set(nextMonthDate);
   }
 
@@ -432,6 +568,8 @@ export class App {
     const currentDate = this.selectedDate();
     const prevMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
     this.removedPurchaseIds.set([]);
+    this.selectedPurchaseProductId.set(null);
+    this.cancelPriceEdit();
     this.selectedDate.set(prevMonthDate);
   }
 

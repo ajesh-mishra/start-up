@@ -14,12 +14,14 @@ export interface PurchaseCreateDto {
   purchase_date: Date | string;
   product_id: number;
   quantity: number;
+  price?: number | null;
 }
 
 export interface PurchaseUpdateDto {
   purchase_date?: Date | string;
   product_id?: number;
   quantity?: number;
+  price?: number;
 }
 
 export interface MonthlyTotalDto {

@@ -23,6 +23,9 @@ class PurchaseUpdate(SQLModel):
     purchase_date: date | None = None
     product_id: int | None = Field(default=None, gt=0)
     quantity: int | None = Field(default=None, gt=0)
+    price: int | None = Field(
+        default=None, ge=0, description="Unit price in minor currency units"
+    )
 
 
 class Purchase(PurchaseBase, table=True):

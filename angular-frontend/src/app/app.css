@@ -1,5 +1,19 @@
 @reference "tailwindcss";
 
+.calendar-month-header {
+  @apply sticky top-0 z-40 bg-white;
+}
+
+.calendar-weekdays {
+  @apply sticky z-30 bg-white;
+  top: 128px;
+}
+
+.calendar-selected-week {
+  @apply sticky z-20 bg-white;
+  top: 160px;
+}
+
 .todaysdate {
   @apply border border-blue-300 bg-blue-50 text-blue-700;
 }
@@ -18,8 +32,4 @@
 
 .has-purchase:not(.selecteddate) {
   @apply text-slate-800;
-}
-
-.purchase-dot {
-  @apply absolute bottom-1 h-1.5 w-1.5 rounded-full;
 }

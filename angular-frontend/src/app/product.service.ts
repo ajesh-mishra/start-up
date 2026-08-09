@@ -15,6 +15,12 @@ export interface ProductCreateDto {
   price: number;
 }
 
+export interface ProductUpdateDto {
+  name?: string | null;
+  category?: string | null;
+  price?: number | null;
+}
+
 export type ProductPriceByName = Record<string, number>;
 
 @Injectable({
@@ -30,6 +36,10 @@ export class ProductService {
 
   createProducts(products: ProductCreateDto[]): Observable<ProductDto[]> {
     return this.http.post<ProductDto[]>(`${this.url}/product/`, products);
+  }
+
+  updateProduct(productId: number, updates: ProductUpdateDto): Observable<ProductDto> {
+    return this.http.put<ProductDto>(`${this.url}/product/${productId}`, updates);
   }
 
   getPriceByProductName(): Observable<ProductPriceByName> {
