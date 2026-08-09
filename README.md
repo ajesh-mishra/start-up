@@ -7,17 +7,15 @@ Command to build & start all the services/ containers.
 - DevOps Toolbox
 
 ```bash
-# Build + start all services
 docker compose up --build
-
-# For a clean database reset (optional)
-docker compose down -v
 ```
 
 Access the application using URLs
 
-- UI - http://localhost:4200/
-- API - http://localhost:8000/docs
+- [Angular Frontend](http://localhost:4200/)
+- [Swagger API](http://localhost:8000/docs)
+- [Open API Specification](http://localhost:8000/openapi.json)
+
 
 ## Build and push images with Docker Buildx Bake
 
@@ -35,7 +33,6 @@ Push `latest` tag:
 
 ```bash
 docker login
-
 docker buildx bake all --push
 ```
 

@@ -1,4 +1,4 @@
-# App
+## Start-up Angular Frontend
 
 This is an Angular Project build with version `21.2.0`. The application is a frontend for the expence calculator. 
 

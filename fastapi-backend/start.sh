@@ -3,9 +3,8 @@ set -euo pipefail
 
 if [ "${RUN_CONTEXT:-}" = "devcontainer" ] && command -v git >/dev/null 2>&1
 then
-  git config --global --add safe.directory /workspace
+    git config --global --add safe.directory /workspace
 fi
-
 
 echo "Running Database Migrations"
 alembic upgrade head
