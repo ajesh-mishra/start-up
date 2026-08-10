@@ -4,17 +4,10 @@ The project is configured to use devcontainers, please open in VSCode or PyCharm
 - Uses Alembic for migrations
 
 
-## Test Application Code using DevContainers
-Command to start backend. 
+### Command to start backend. 
 ```bash
 uv run fastapi dev --host 0.0.0.0 --port 8000
 uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-
-## Run the application
-```bash
-docker run -p 8000:8000 fastapi-backend:0.0.1
 ```
 
 

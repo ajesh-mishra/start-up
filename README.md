@@ -13,11 +13,11 @@ docker compose up --build
 Access the application using URLs
 
 - [Angular Frontend](http://localhost:4200/)
-- [Swagger API](http://localhost:8000/docs)
-- [Open API Specification](http://localhost:8000/openapi.json)
+- [FastAPI Swagger](http://localhost:8000/docs)
+- [OpenAPI Specification](http://localhost:8000/openapi.json)
 
 
-## Build and push images with Docker Buildx Bake
+### Build and push images with Docker Buildx Bake
 
 Use the root `docker-bake.hcl` to build both images consistently.
 
@@ -38,6 +38,13 @@ docker buildx bake all --push
 
 ### Docker Compose networking note
 
-- From your browser, use `localhost` (example: `http://localhost:4200/api/...`).
-- Inside containers, use service names on the Compose network (example: `http://fastapi-backend:8000`).
-- In this setup, Nginx in the frontend container proxies `/api/*` to the backend service.
+- **From your browser (host machine):** use published ports on `localhost`.
+	- Frontend UI: `http://localhost:4200`
+	- Backend directly: `http://localhost:8000`
+- **From one container to another:** use Compose service names (not `localhost`).
+	- Example: `http://fastapi-backend:8000`
+- **Frontend API calls should stay relative** (for example, `/api/products`).
+	- In production compose, Nginx in `angular-frontend` forwards `/api/*` to `fastapi-backend:8000`.
+	- In Angular dev mode (`ng serve`), `proxy.conf.json` does the same forwarding.
+
+Quick rule: use `localhost` from your browser, and service names only from inside containers.
