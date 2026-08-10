@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from datetime import date
 
 from sqlmodel import Session, select
@@ -28,7 +28,10 @@ def create_product(
 
 @router.put("/{product_id}", response_model=Product)
 def update_product(
-    product_id: int, product: ProductUpdate, session: Session = Depends(get_session)
+    product_id: int,
+    product: ProductUpdate,
+    effective_from: date | None = Query(default=None),
+    session: Session = Depends(get_session),
 ):
     db_product = session.get(Product, product_id)
 
@@ -39,8 +42,10 @@ def update_product(
     db_product.sqlmodel_update(update_data)
 
     if "price" in update_data and update_data["price"] is not None:
+        effective_date = effective_from or date.today()
         statement = select(Purchase).where(
-            Purchase.product_id == product_id, Purchase.purchase_date >= date.today()
+            Purchase.product_id == product_id,
+            Purchase.purchase_date >= effective_date,
         )
         purchases_to_update = session.exec(statement).all()
         for purchase in purchases_to_update:

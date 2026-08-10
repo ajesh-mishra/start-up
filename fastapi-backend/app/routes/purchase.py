@@ -93,9 +93,8 @@ def create_purchase(purchase: PurchaseCreate, session: Session = Depends(get_ses
     if not db_product:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    db_purchase = Purchase.model_validate(
-        {**purchase.model_dump(), "price": db_product.price}
-    )
+    purchase_price = purchase.price if purchase.price is not None else db_product.price
+    db_purchase = Purchase.model_validate({**purchase.model_dump(), "price": purchase_price})
     return update_database(session, db_purchase)
 
 
@@ -116,7 +115,8 @@ def update_purchase(
         if not db_product:
             raise HTTPException(status_code=404, detail="Product not found")
 
-        update_data["price"] = db_product.price
+        if "price" not in update_data or update_data["price"] is None:
+            update_data["price"] = db_product.price
 
     db_purchase.sqlmodel_update(update_data)
     return update_database(session, db_purchase)

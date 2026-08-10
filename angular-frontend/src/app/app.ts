@@ -397,6 +397,7 @@ export class App {
 
   private getProductPriceUpdateOperations() {
     const products = this.productsRx.value() ?? [];
+    const effectiveFrom = this.selectedDateString();
     const productPriceById = new Map(
       products
         .filter((product): product is ProductDto & { id: number } => product.id !== null)
@@ -414,7 +415,7 @@ export class App {
     }
 
     return Array.from(updatedPricesByProductId.entries()).map(([productId, price]) =>
-      this.productService.updateProduct(productId, { price }),
+      this.productService.updateProduct(productId, { price }, effectiveFrom),
     );
   }
 

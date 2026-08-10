@@ -38,8 +38,10 @@ export class ProductService {
     return this.http.post<ProductDto[]>(`${this.url}/product/`, products);
   }
 
-  updateProduct(productId: number, updates: ProductUpdateDto): Observable<ProductDto> {
-    return this.http.put<ProductDto>(`${this.url}/product/${productId}`, updates);
+  updateProduct(productId: number, updates: ProductUpdateDto, effectiveFrom?: string): Observable<ProductDto> {
+    return this.http.put<ProductDto>(`${this.url}/product/${productId}`, updates, {
+      params: effectiveFrom ? { effective_from: effectiveFrom } : undefined,
+    });
   }
 
   getPriceByProductName(): Observable<ProductPriceByName> {
