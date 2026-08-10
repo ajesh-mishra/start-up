@@ -44,6 +44,7 @@ export class ExpenseCalculatorPage {
   protected selectedPurchaseProductId = signal<number | null>(null);
   protected editingPriceProductId = signal<number | null>(null);
   protected editedPriceValue = signal('');
+  protected explicitlyEditedProductPriceIds = signal<number[]>([]);
 
   productsRx = rxResource<ProductDto[], void>({
     stream: () => this.productService.getProducts(),
@@ -380,11 +381,25 @@ export class ExpenseCalculatorPage {
     }
 
     const updatedPrice = Number(this.editedPriceValue());
+    let priceChanged = false;
     this.editablePurchase.update((purchases) =>
       purchases.map((purchase) =>
-        purchase.productId === productId ? { ...purchase, unitPrice: updatedPrice } : purchase,
+        purchase.productId === productId
+          ? (() => {
+              if (purchase.unitPrice !== updatedPrice) {
+                priceChanged = true;
+              }
+              return { ...purchase, unitPrice: updatedPrice };
+            })()
+          : purchase,
       ),
     );
+
+    if (priceChanged) {
+      this.explicitlyEditedProductPriceIds.update((editedIds) =>
+        editedIds.includes(productId) ? editedIds : [...editedIds, productId],
+      );
+    }
 
     this.cancelPriceEdit();
   }
@@ -397,6 +412,11 @@ export class ExpenseCalculatorPage {
   private getProductPriceUpdateOperations() {
     const products = this.productsRx.value() ?? [];
     const effectiveFrom = this.selectedDateString();
+    const explicitlyEditedProductIds = new Set(this.explicitlyEditedProductPriceIds());
+
+    if (!explicitlyEditedProductIds.size) {
+      return [];
+    }
 
     const productPriceById = new Map(
       products
@@ -406,6 +426,10 @@ export class ExpenseCalculatorPage {
 
     const updatedPricesByProductId = new Map<number, number>();
     for (const purchase of this.editablePurchase()) {
+      if (!explicitlyEditedProductIds.has(purchase.productId)) {
+        continue;
+      }
+
       const currentProductPrice = productPriceById.get(purchase.productId);
       if (currentProductPrice === undefined || currentProductPrice === purchase.unitPrice) {
         continue;
@@ -458,6 +482,7 @@ export class ExpenseCalculatorPage {
     forkJoin(operations.length ? operations : [of(null)]).subscribe((data) => {
       console.log('Purchase saved successfully', data);
       this.removedPurchaseIds.set([]);
+      this.explicitlyEditedProductPriceIds.set([]);
       this.selectedPurchaseProductId.set(null);
       this.cancelPriceEdit();
       this.purchaseRx.reload();
@@ -500,6 +525,7 @@ export class ExpenseCalculatorPage {
   updateSelectedDate(day: number) {
     const selectedDate = new Date(this.selectedYear(), parseInt(this.selectedMonth()) - 1, day);
     this.removedPurchaseIds.set([]);
+    this.explicitlyEditedProductPriceIds.set([]);
     this.selectedPurchaseProductId.set(null);
     this.cancelPriceEdit();
     this.selectedDate.set(selectedDate);
@@ -560,6 +586,7 @@ export class ExpenseCalculatorPage {
     const currentDate = this.selectedDate();
     const nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     this.removedPurchaseIds.set([]);
+    this.explicitlyEditedProductPriceIds.set([]);
     this.selectedPurchaseProductId.set(null);
     this.cancelPriceEdit();
     this.selectedDate.set(nextMonthDate);
@@ -569,6 +596,7 @@ export class ExpenseCalculatorPage {
     const currentDate = this.selectedDate();
     const prevMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
     this.removedPurchaseIds.set([]);
+    this.explicitlyEditedProductPriceIds.set([]);
     this.selectedPurchaseProductId.set(null);
     this.cancelPriceEdit();
     this.selectedDate.set(prevMonthDate);
