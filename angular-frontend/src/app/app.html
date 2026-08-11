@@ -1,0 +1,57 @@
+<div class="container">
+  <aside class="left-pane" aria-label="Primary navigation">
+    <nav class="icon-nav" aria-label="Page navigation">
+      @for (item of navigationItems; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          #routeActive="routerLinkActive"
+          [attr.aria-current]="routeActive.isActive ? 'page' : null"
+          [attr.aria-label]="item.label"
+          class="nav-icon">
+          @if (item.icon === 'expense') {
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3.5" y="4" width="17" height="16" rx="3" stroke="currentColor" stroke-width="1.8" />
+              <path d="M7.5 9h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              <path d="M7.5 12h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              <path d="M7.5 15h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          } @else {
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="4" y="5" width="16" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8" />
+              <path d="M8 3.5v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              <path d="M16 3.5v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              <path d="M4 9h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              <circle cx="9" cy="13" r="1" fill="currentColor" />
+              <circle cx="12" cy="13" r="1" fill="currentColor" />
+              <circle cx="15" cy="13" r="1" fill="currentColor" />
+            </svg>
+          }
+        </a>
+      }
+    </nav>
+  </aside>
+
+  <main
+    class="middle-pane"
+    [class.dragging]="isDragging()"
+    [style.transform]="middlePaneTransform()"
+    [style.transition]="middlePaneTransition()"
+    (pointerdown)="onPanePointerDown($event)"
+    (pointermove)="onPanePointerMove($event)"
+    (pointerup)="onPanePointerUp($event)"
+    (pointercancel)="onPanePointerUp($event)" 
+    (window:resize)="onViewportResize()"
+    aria-label="Page content">
+    <router-outlet />
+  </main>
+
+  <aside class="right-pane" aria-label="Sub-pages">
+    <h2 class="subpages-title">Sub-pages</h2>
+    <nav class="subpages-nav" aria-label="Sub-pages for selected page">
+      @for (subPage of activeSubPages(); track subPage) {
+        <span class="subpage-item">{{ subPage }}</span>
+      }
+    </nav>
+  </aside>
+</div>

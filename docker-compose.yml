@@ -56,5 +56,16 @@ services:
     networks:
       - app-network
 
+  cloudflare-daemon:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - angular-frontend
+    networks:
+      - app-network
+
 networks:
   app-network:

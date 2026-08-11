@@ -1,0 +1,124 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.container {
+  position: relative;
+  height: 100vh;
+  color: white;
+  overflow: hidden;
+  background-color: rgb(93, 133, 168);
+  font-family: 'Open Sans', sans-serif;
+}
+
+.left-pane {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 16px;
+  background-color: rgb(241, 245, 249);
+  height: 100vh;
+  width: 20%;
+  position: absolute;
+  z-index: 80;
+  top: 0;
+  left: 0;
+}
+
+.icon-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nav-icon {
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  text-decoration: none;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.nav-icon:hover {
+  background-color: transparent;
+}
+
+.nav-icon:focus-visible {
+  outline: 2px solid rgb(148, 163, 184);
+  outline-offset: 2px;
+}
+
+.nav-icon.active {
+  background-color: transparent;
+}
+
+.icon {
+  width: 36px;
+  height: 36px;
+  color: rgb(71, 85, 105);
+}
+
+.nav-icon.active .icon {
+  color: rgb(37, 99, 235);
+}
+
+.middle-pane {
+  background-color: white;
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  box-shadow: 0 0 28px rgba(15, 23, 42, 0.22);
+  overflow: auto;
+  color: #0f172a;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.middle-pane.dragging {
+  will-change: transform;
+  cursor: grabbing;
+}
+
+.right-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 16px;
+  background-color: rgb(241, 245, 249);
+  color: #0f172a;
+  height: 100vh;
+  width: 70%;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 30vw;
+}
+
+.subpages-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.subpages-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subpage-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background-color: rgb(226, 232, 240);
+  color: #1e293b;
+  font-size: 0.9rem;
+  font-weight: 600;
+}

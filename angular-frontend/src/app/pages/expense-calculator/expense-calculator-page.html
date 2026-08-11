@@ -109,7 +109,7 @@
           <div class="flex flex-col">
             <button
               type="button"
-              class="w-fit text-sm font-semibold tracking-tight capitalize text-slate-800 hover:text-blue-600"
+              class="w-fit text-sm font-medium capitalize text-slate-800 hover:text-blue-600"
               [class.text-blue-600]="isPurchaseSelected(purchase.productId)"
               (click)="selectPurchase(purchase.productId)">
               {{ purchase.productName }}
@@ -117,15 +117,15 @@
             <div class="mt-1 flex items-center gap-3">
               <div class="flex items-center overflow-hidden rounded-lg border border-slate-200">
                 <button
-                  class="px-2 py-1.5 text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600"
+                  class="pl-2 py-1 text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600"
                   (click)="decrement(purchase.productId)">
                   -
                 </button>
-                <span class="min-w-8 px-2 py-1.5 text-center text-sm font-semibold tabular-nums text-slate-700">{{
+                <span class="min-w-8 px-3 py-1 text-center text-sm font-medium tabular-nums text-slate-600">{{
                   purchase.quantity
                 }}</span>
                 <button
-                  class="px-2 py-1.5 text-slate-600 transition-colors hover:bg-emerald-50 hover:text-emerald-600"
+                  class="pr-2 py-1 text-slate-600 transition-colors hover:bg-emerald-50 hover:text-emerald-600"
                   (click)="increment(purchase.productId)">
                   +
                 </button>
@@ -160,7 +160,7 @@
               } @else {
                 <button
                   type="button"
-                  class="text-xs font-medium text-slate-500 hover:text-blue-600"
+                  class="text-sm font-normal text-slate-600 hover:text-blue-600"
                   (click)="startPriceEdit(purchase.productId, purchase.unitPrice)">
                   {{ purchase.unitPrice | currency: 'INR' }}
                 </button>
@@ -168,7 +168,7 @@
             </div>
           </div>
           <div class="flex-1"></div>
-          <span class="text-base font-semibold tracking-tight tabular-nums text-slate-800">{{
+          <span class="text-base font-medium tracking-tight tabular-nums text-slate-800">{{
             purchase.unitPrice * purchase.quantity | currency: 'INR'
           }}</span>
         </div>
@@ -196,10 +196,10 @@
           </svg>
         </span>
         <div class="flex flex-col">
-          <span class="text-sm font-semibold tracking-tight capitalize text-slate-800">
+          <span class="text-sm font-medium capitalize text-slate-700">
             {{ availableProductsCount() > 0 ? 'Add Products' : 'Add New Product' }}
           </span>
-          <span class="text-xs font-medium text-slate-500">
+          <span class="text-xs font-normal text-slate-500/75">
             {{
               availableProductsCount() > 0
                 ? availableProductsCount() + ' more product(s) available'
@@ -221,8 +221,8 @@
 }
 
 @if (hasEditablePurchase() || isExistingPurchase()) {
-  <div class="h-24 md:hidden"></div>
-  <div class="fixed inset-x-0 bottom-0 z-20 bg-white px-4 pb-4 pt-3 md:sticky md:mt-6">
+  <div class="h-24"></div>
+  <div class="fixed inset-x-0 bottom-0 z-20 bg-white px-4 pb-4 pt-3">
     <div class="mx-auto flex w-full justify-end">
       <button
         (click)="save()"

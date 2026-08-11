@@ -1,0 +1,13 @@
+.page-wrap {
+  padding: 24px;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+p {
+  color: #334155;
+}
