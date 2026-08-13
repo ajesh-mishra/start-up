@@ -15,7 +15,7 @@
   background: white;
 }
 
-.expense-products-scroll {
+.expense-content-scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -35,7 +35,6 @@
 .calendar-selected-week {
   @apply sticky z-20 bg-white;
   top: 160px;
-  box-shadow: 0 1px 0 rgb(226 232 240);
 }
 
 .todaysdate {
