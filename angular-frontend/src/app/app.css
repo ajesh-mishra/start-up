@@ -1,11 +1,13 @@
 :host {
   display: block;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100svh;
 }
 
 .container {
   position: relative;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100svh;
   color: white;
   overflow: hidden;
   background-color: rgb(93, 133, 168);
@@ -18,7 +20,8 @@
   align-items: flex-start;
   padding-top: 16px;
   background-color: rgb(241, 245, 249);
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100svh;
   width: 20%;
   position: absolute;
   z-index: 80;
@@ -72,10 +75,13 @@
   z-index: 100;
   top: 0;
   left: 0;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100svh;
   width: 100vw;
   box-shadow: 0 0 28px rgba(15, 23, 42, 0.22);
   overflow: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
   color: #0f172a;
   touch-action: pan-y;
   cursor: grab;
@@ -93,7 +99,8 @@
   padding: 20px 16px;
   background-color: rgb(241, 245, 249);
   color: #0f172a;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100svh;
   width: 70%;
   position: absolute;
   z-index: 0;

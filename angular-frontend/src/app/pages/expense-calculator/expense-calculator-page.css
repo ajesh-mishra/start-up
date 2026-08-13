@@ -33,3 +33,25 @@
 .has-purchase:not(.selecteddate) {
   @apply text-slate-800;
 }
+
+.expense-save-spacer {
+  height: calc(6rem + env(safe-area-inset-bottom));
+}
+
+.expense-save-dock {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .expense-save-button {
+    transition-property: box-shadow, background-color, opacity;
+  }
+
+  .expense-save-button:hover,
+  .expense-save-button:active {
+    transform: none;
+  }
+}
