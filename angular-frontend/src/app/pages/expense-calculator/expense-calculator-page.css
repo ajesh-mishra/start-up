@@ -29,12 +29,12 @@
 
 .calendar-weekdays {
   @apply sticky z-30 bg-white;
-  top: 128px;
+  top: 124px;
 }
 
 .calendar-selected-week {
   @apply sticky z-20 bg-white;
-  top: 160px;
+  top: 156px;
 }
 
 .todaysdate {
